@@ -1,0 +1,378 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Register and login Api Documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/address": {
+            "post": {
+                "tags": [
+                    "User Address"
+                ],
+                "summary": "adds user address",
+                "description": "Get adds user address",
+                "operationId": "addressStore",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "street1",
+                                    "street2",
+                                    "city",
+                                    "state",
+                                    "zip",
+                                    "country"
+                                ],
+                                "properties": {
+                                    "street1": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Biratnagar Bargachi"
+                                    },
+                                    "street2": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Biratnagar Morang"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Biratnagar"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "1"
+                                    },
+                                    "zip": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "54000"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Nepal"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Created"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
+        "/address/{id}": {
+            "put": {
+                "tags": [
+                    "User Address"
+                ],
+                "summary": "updates user address",
+                "description": "Get updates user address",
+                "operationId": "addressUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "address id",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "street1": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "1Biratnagar Bargachi"
+                                    },
+                                    "street2": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "1Biratnagar Morang"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "1Biratnagar"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "11"
+                                    },
+                                    "zip": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "154000"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "1Nepal"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Address"
+                ],
+                "summary": "deletes user address",
+                "description": "Deletes user address",
+                "operationId": "addressDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "address id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "User Register/Login"
+                ],
+                "summary": "register the record",
+                "description": "to register",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "test5"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "test5@gmail.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "9845345633"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "test5"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "success message",
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "status_code": 200,
+                                    "message": "register has been created successfully.",
+                                    "payload": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "User Register/Login"
+                ],
+                "summary": "login",
+                "description": "to login",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "xyz@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "xyz"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "success message",
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "status_code": 200,
+                                    "message": "login has been created successfully.",
+                                    "payload": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
+        "/refresh-token": {
+            "post": {
+                "tags": [
+                    "User Register/Login"
+                ],
+                "summary": "refresh token",
+                "description": "Get refresh token",
+                "operationId": "refreshToken",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh"
+                                ],
+                                "properties": {
+                                    "refresh": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
+        "/get-user": {
+            "get": {
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Get the user",
+                "description": "Get the user",
+                "operationId": "userInfo",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "Bearer_auth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
