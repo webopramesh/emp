@@ -4,24 +4,68 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AddressController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/address",
+     *     tags={"Address"},
+     *     summary="Get all addresses",
+     *     security= {{ "Bearer_auth": "" }},
+     *     description="Get all addresses",
+     *     operationId="getAllAddress",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Addresses fetched successfully"
+     *     )
+     * )
      */
     public function index()
     {
-        //
+        try {
+            $addresses = Address::all();
+            if (!$addresses) {
+                throw new \Exception('No addresses found!');
+            }
+            return response()->json(['message' => 'Addresses fetched successfully', 'data' => $addresses]);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something wrong with server'], 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/user-addresses",
+     *     tags={"User Actions"},
+     *     summary="Get the logged in user addresses",
+     *     security= {{ "Bearer_auth": "" }},
+     *     description="Get the logged in user addresses",
+     *     operationId="userAddresses",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *     )
+     * )
+     */
+    public function userAddresses()
+    {
+        try {
+            $id = auth()->user()->id;
+            $addresses = Address::where('user_id', $id)->get();
+            return response()->json(['message' => 'Logged in users addresses fetched successfully', 'addresses' => $addresses], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
      * @OA\Post(
      *     path="/address",
-     *     tags={"User Address"},
+     *     tags={"Address"},
      *     summary="adds user address",
      *     security= {{ "Bearer_auth": "" }},
      *     description="Get adds user address",
@@ -46,16 +90,23 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Address::create([
-            "street1" => $request->street1,
-            "street2" => $request->street2,
-            "city" => $request->city,
-            "state" => $request->state,
-            "zip" => $request->zip,
-            "country" => $request->country
-        ]);
-
-        return response()->json(['message' => 'Address stored successfully!', 'data' => $response], 201);
+        try {
+            DB::beginTransaction();
+            $response = Address::create([
+                'user_id' => auth()->user()->id,
+                "street1" => $request->street1,
+                "street2" => $request->street2,
+                "city" => $request->city,
+                "state" => $request->state,
+                "zip" => $request->zip,
+                "country" => $request->country
+            ]);
+            DB::commit();
+            return response()->json(['message' => 'Address stored successfully!', 'data' => $response], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Something wrong with server'], 500);
+        }
     }
 
     /**
@@ -72,14 +123,14 @@ class AddressController extends Controller
     /**
      * @OA\Put(
      *     path="/address/{id}",
-     *     tags={"User Address"},
+     *     tags={"Address"},
      *     summary="updates user address",
      *     security= {{ "Bearer_auth": "" }},
      *     description="Get updates user address",
      *     operationId="addressUpdate",
      *      @OA\Parameter(
      *         name="id",
-     *         in="query",
+     *         in="path",
      *         description="address id",
      *         required=true,
      *      ),
@@ -102,29 +153,41 @@ class AddressController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $response = Address::where('id', $request->id)->update([
-            "street1" => $request->street1,
-            "street2" => $request->street2,
-            "city" => $request->city,
-            "state" => $request->state,
-            "zip" => $request->zip,
-            "country" => $request->country
-        ]);
-        return response()->json(['message' => 'Address updated successfully!', 'address_id' => $request->id], 200);
+        try {
+            $address = Address::find($id);
+            if (!$address) {
+                throw new \Exception('No addresses founds!');
+            }
+
+            DB::beginTransaction();
+            $address->update([
+                "street1" => $request->street1,
+                "street2" => $request->street2,
+                "city" => $request->city,
+                "state" => $request->state,
+                "zip" => $request->zip,
+                "country" => $request->country
+            ]);
+            DB::commit();
+            return response()->json(['message' => 'Address updated successfully!', 'data' => ['address_id' => $id]], 200);
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 
     /**
      * @OA\Delete(
      *     path="/address/{id}",
-     *     tags={"User Address"},
+     *     tags={"Address"},
      *     summary="deletes user address",
      *     security= {{ "Bearer_auth": "" }},
      *     description="Deletes user address",
      *     operationId="addressDelete",
      *      @OA\Parameter(
      *         name="id",
-     *         in="query",
+     *         in="path",
      *         description="address id",
      *         required=true,
      *      ),
@@ -134,9 +197,17 @@ class AddressController extends Controller
      *     )
      * )
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        Address::find($request->id)->delete();
-        return response()->json(['message' => 'Address deleted successfully!', 'address_id' => $request->id], 200);
+        try {
+            $address = Address::find($id);
+            if (!$address) {
+                throw new \Exception('No records found!');
+            }
+            Address::find($id)->delete();
+            return response()->json(['message' => 'Address deleted successfully!', 'data' => ['address_id' => $id]], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

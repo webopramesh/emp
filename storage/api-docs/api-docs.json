@@ -11,9 +11,27 @@
     ],
     "paths": {
         "/address": {
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get all addresses",
+                "description": "Get all addresses",
+                "operationId": "getAllAddress",
+                "responses": {
+                    "201": {
+                        "description": "Addresses fetched successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            },
             "post": {
                 "tags": [
-                    "User Address"
+                    "Address"
                 ],
                 "summary": "adds user address",
                 "description": "Get adds user address",
@@ -80,10 +98,30 @@
                 ]
             }
         },
+        "/user-addresses": {
+            "get": {
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Get the logged in user addresses",
+                "description": "Get the logged in user addresses",
+                "operationId": "userAddresses",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer_auth": ""
+                    }
+                ]
+            }
+        },
         "/address/{id}": {
             "put": {
                 "tags": [
-                    "User Address"
+                    "Address"
                 ],
                 "summary": "updates user address",
                 "description": "Get updates user address",
@@ -91,7 +129,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "description": "address id",
                         "required": true
                     }
@@ -151,7 +189,7 @@
             },
             "delete": {
                 "tags": [
-                    "User Address"
+                    "Address"
                 ],
                 "summary": "deletes user address",
                 "description": "Deletes user address",
@@ -159,7 +197,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "description": "address id",
                         "required": true
                     }

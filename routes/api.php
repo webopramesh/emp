@@ -25,6 +25,9 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::get('get-user', [AuthController::class, 'userInfo']);
     Route::post('refresh-token', [AuthController::class, 'refreshToken']);
+
+    Route::get('address', [AddressController::class, 'index']);
+    Route::get('user-addresses', [AddressController::class, 'userAddresses']);
     Route::post('address', [AddressController::class, 'store']);
     Route::put('address/{id}', [AddressController::class, 'update']);
     Route::delete('address/{id}', [AddressController::class, 'destroy']);
